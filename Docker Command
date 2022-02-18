@@ -1,10 +1,83 @@
 #we will deploy our first container and try to access the same using a browser
 #nginx or apache #web server
-docker container run --publish 80:80 --detach nginx
-docker ps
-docker images
-docker container run --publish 81:80 --detach nginx
+   3  docker container run --publish 80:80 --detach nginx
+    4  docker ps
+    5  docker images
+    6  docker container run --publish 81:80 --detach nginx
     
     #apache image deployment
-docker container run --publish 82:80 --detach httpd
-docker ps
+     12  docker container run --publish 82:80 --detach httpd
+   13  docker ps
+   
+   #how to check the logs of a container
+    11  docker ps
+   12  docker logs
+   13  docker logs 91d6ae7dac92
+   14  docker logs 99f
+#how to stop and terminate your containers
+  21  docker ps
+   22  docker rm 91d
+   23  docker stop 91d
+   24  docker ps -a
+   25  docker rm 91d
+   26  docker ps -a
+   
+   #we launch a new container with a custom name and try to see how much resource utilization it is doing. cpu/ram/storage/networking
+    35  docker container run -p 84:80 -d --name webhost nginx
+   36  docker ps
+   #this will give you a brief monitoring information about a single container
+   37  docker container top webhost
+   #this will give you running monitoring information about all your container
+   38  docker container stats
+   #after you run docker container stat command it will show you running report to come out of it press Ctrl c
+
+#we will launch an mysql database container we will check the logs and find out the password to loging to the db
+#then using docker exec command we will loging to the database container. 
+#finally we will create a database inside the db we will create an table insert some data.
+   42  docker run -d --name db -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql
+   43  docker ps
+   44  docker exec -it db bash
+   #to come out of the container type exit
+#how to loging to mysql prompt
+ 50  docker ps
+   51  docker logs db
+   #it will show you the password in logs format ( GENERATED ROOT PASSWORD: aXusahb7kiezudohgh4widohthie8eis)
+   52  docker exec -it db bash
+   #once you login inside the container
+   mysql -u root -p
+   #copy the password from log file and paste it then enter
+   #below are mysql command
+   show databases;
+   create database employee;
+   show databases;
+   #finally to exit from mysql prompt
+   exit
+   #again type exit to come out of container
+   exit
+   
+   #if you want to know more information about your container
+   docker container inpect containerid
+   
+   #how to create an persistent volume
+    38  docker run -d --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=true -v mysql-db:/var/lib/mysql mysql:8.0.28-oracle
+   39  docker ps
+   40  docker container inspect mysql
+   41  docker volume ls
+   42  docker volume inspect mysql-db
+   43  cd /var/lib/docker/volumes/mysql-db/_data
+   cd /root
+   
+   #how to upgrade a container
+     32  docker ps
+   33  docker stop mysql
+   34  docker ps
+   35  docker ps -a
+   36  docker rm mysql
+   37  docker ps -a
+   38  docker volume ls
+   39  docker ps
+   40  docker container inspect mysql
+   docker run -d --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=true -v mysql-db:/var/lib/mysql mysql:8
+   docker ps
+   docker container inspect mysql
+   
