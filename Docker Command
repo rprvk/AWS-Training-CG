@@ -1,0 +1,10 @@
+#we will deploy our first container and try to access the same using a browser
+#nginx or apache #web server
+docker container run --publish 80:80 --detach nginx
+docker ps
+docker images
+docker container run --publish 81:80 --detach nginx
+    
+    #apache image deployment
+docker container run --publish 82:80 --detach httpd
+docker ps
