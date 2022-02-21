@@ -1,0 +1,37 @@
+#we need to verify that in my linux machine we have java is there or not
+   2  javac
+    3  apt install default-jdk
+    4  java --version
+    #we will create a project folder and put a simple java application inside it and compile it. 
+     7  mkdir javaapp #this will be my application folder
+    8  cd javaapp/ #we wil go inside the app folder
+    9  nano HelloWorld.java #we will use a nano editor to create an application similar to notepad
+    #copy the helloworld application from the site. 
+    #then past it. Press Ctrl x then y then enter
+   10  cat HelloWorld.java #cat command will provide you an oputput of your file. 
+   11  javac HelloWorld.java #this will compile the java application
+   12  java HelloWorld #this will allow you to run your app
+#now we will conver the application into a jar file
+
+   18  nano manifest.txt #we will create a manifest file and provide information about the manifest file
+   Manifest-Version: 1.0
+   Created-By: Me
+   Main-Class: HelloWorld
+   19  ls
+   20  cat manifest.txt #again we use cat command to verify the content of manifest file
+   21  jar cfm HelloWorld.jar manifest.txt HelloWorld.class #we will finaly package the jar application
+   22  ls
+   23  java -jar HelloWorld.jar #we will run the jar app
+#now we will convert my application into an container based image. 
+  4  nano dockerfile
+FROM openjdk:11
+WORKDIR /
+ADD HelloWorld.jar HelloWorld.jar
+EXPOSE 8080
+CMD java -jar HelloWorld.jar
+
+    5  cat dockerfile
+    6  docker build -t javaapp:v1 .
+    
+    7  docker images
+    8  docker run javaapp:v1
