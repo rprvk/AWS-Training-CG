@@ -1,0 +1,20 @@
+git clone https://github.com/gopal1409/springboot-chat-app.git
+ls
+apt install maven
+ls
+cd springboot-chat-app/
+ls
+mvn clean package
+ls
+cd target
+ls
+cd ..
+
+docker build -t chatapp .
+ 
+docker container run --publish 8080:8080 -d chatapp
+# docker container run -p 8080:8080 -d chatapp
+
+# to see if container is running or not
+docker ps  
+   
