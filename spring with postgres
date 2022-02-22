@@ -33,6 +33,14 @@ VALUES (1, 'Madol Duwa', 'Martin Wickramasinghe'),
 CREATE SEQUENCE hibernate_sequence START 1;
 SELECT setval('hibernate_sequence', (SELECT max(id) FROM public.books));
 exit
+
+\dt
+
+select * from table book;
+
+select * from table booksl
+
+
 Nice work, now we are done with the database. Next we are going to create the springboot app.
 Step 3:
 Lets build a springboot app to get some data from the postgres db.
