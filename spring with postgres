@@ -1,0 +1,212 @@
+docker info
+To see running containers, run
+docker container list -a
+or
+docker ps
+To check all the images you have, run
+docker image list -a
+Now we need to set up postgres database. We can get it from the Docker Hub. But we need to create a volume for store data.
+docker create -v /var/lib/postgresql/data --name PostgresData alpine
+then, we create the database.
+docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=admin -d --volumes-from PostgresData postgres
+ 67  apt install postgresql-client
+docker ps
+
+#we need to login to postgress database
+ psql -h localhost -U postgres
+
+
+DROP TABLE IF EXISTS books CASCADE;
+CREATE TABLE books (
+  id         SERIAL,
+  title       TEXT,
+  author      TEXT,
+
+  PRIMARY KEY (id)
+);
+
+INSERT INTO public.books (
+  id, title, author)
+VALUES (1, 'Madol Duwa', 'Martin Wickramasinghe'),
+  (2, 'Gamperaliya', 'Martin Wickramasinghe');
+
+CREATE SEQUENCE hibernate_sequence START 1;
+SELECT setval('hibernate_sequence', (SELECT max(id) FROM public.books));
+exit
+Nice work, now we are done with the database. Next we are going to create the springboot app.
+Step 3:
+Lets build a springboot app to get some data from the postgres db.
+Task: we have some book data — id,title,auther — in the db and we send GET request to retrieve data from db.
+
+BookEntity.java
+
+package com.example.demo;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "books")
+@Getter
+@Setter
+public class BookEntity {
+
+    @Id
+    private Long id;
+
+    private String title;
+    private String author;
+
+}
+
+BookRepositoty.java
+package com.example.demo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BookRepository  extends JpaRepository<BookEntity,String> {
+
+    BookEntity findById(Long id);
+
+}
+
+RestController.java
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+@RequestMapping(path = "/book")
+@ResponseBody
+public class RestController {
+    private final RestService restService;
+
+    @Autowired
+    public RestController(RestService restService) {
+        this.restService = restService;
+    }
+    @RequestMapping(value = "data", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity onResRequest(@RequestParam(value = "id") String id){
+        Long Id = Long.parseLong(id);
+        return ResponseEntity.ok(restService.getBookStats(Id));
+    }
+}
+RestService.java
+package com.example.demo;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+@Transactional
+public class RestService {
+    private BookRepository bookRepository;
+
+    @Autowired
+    public RestService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    public String getBookStats(Long id){
+        BookEntity book= bookRepository.findById(id);
+        String result="{ID : "+book.getId().toString()+",Title : "+book.getTitle()+",Author :"+ book.getAuthor()+" }";
+
+        return result;
+    }
+}
+application.properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/testdb
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.username= postgres
+spring.datasource.password=admin
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=none
+DemoApplication.java
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class DemoApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+}
+Now build the app and create the .jar and check whether it is correctly placed inside ./target/*.jar
+Lets build the docker image and run the container for our app.
+For building the image, we need Dockerfile (this file gives the instructions how to build the docker image).
+FROM openjdk:8-jdk-alpine
+VOLUME /tmp
+EXPOSE 8082
+RUN mkdir -p /app/
+RUN mkdir -p /app/logs/
+ADD target/demo-0.0.1-SNAPSHOT.jar /app/app.jar
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Dspring.profiles.active=container", "-jar", "/app/app.jar"]
+Note: alpine version is for reducing the image size.
+Now goto powershell cd into project folder nd run,
+docker build ./ -t springbootapp
+-t for tagging the image with given name.
+Now again check your images.
+
+springbootapp image
+Step 4:
+Now we need to deploy containers combining all together. For that, we use docker-compose.yml file.
+Inside the project directory create .yml file and save following lines.
+version: "3"
+services:
+  postgres:
+    image: postgres:latest
+    network_mode: bridge
+    container_name: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    expose:
+    - 5432
+    ports:
+      - 5432:5432
+    environment:
+         - POSTGRES_PASSWORD=admin
+         - POSTGRES_USER=postgres
+         - POSTGRES_DB=testdb
+    restart: unless-stopped
+# APP*****************************************
+  springbootapp:
+    image: springbootapp:latest
+    network_mode: bridge
+    container_name: springbootapp
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    links:
+      - postgres
+volumes:
+  postgres-data:
+Now run ,
+docker-compose up
+You can build image using Dockerfile before run containers,
+docker-compose up -build
+Now everything has done.
