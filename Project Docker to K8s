@@ -1,0 +1,13 @@
+#first we will install docker in this vm
+24  sudo apt-get update
+   25  sudo apt-get install     ca-certificates     curl     gnupg     lsb-release
+   26  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+   27  echo   "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   28  sudo apt-get update
+   29  sudo apt-get install docker-ce docker-ce-cli containerd.io
+   30  docker --version
+  #we are building a maven based application i need to install java and maven
+   33  apt install default-jdk
+   34  java --version
+   35  apt install maven
+   36  mvn --version
