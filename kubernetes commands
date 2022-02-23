@@ -1,3 +1,8 @@
 kubectl run my-first-pod --image stacksimplify/kubenginx:1.0.0
 kubectl get pod
 kubectl describe pod my-first-pod
+
+#how the pod is deployed
+kubectl get pod
+kubectl get pod my-first-pod
+kubectl describe pod my-first-pod
