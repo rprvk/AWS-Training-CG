@@ -12,3 +12,19 @@ nano pod.yaml
 kubectl apply -f pod.yaml
 kubectl get pod
 kubectl describe pod myapp
+
+#export it
+ kubectl expose pod myapp --type=NodePort --port 80 --name=myapp-service
+
+#error: couldn't retrieve selectors via --selector flag or introspection: the pod has no labels and cannot be exposed
+#map pod with service, create lable in yml|yaml file(like address)(format is key -value)
+
+kubectl get pod
+kubectl describe pod myapp
+nano pod.yaml (add lables in code)
+kubectl apply -f pod.yaml
+kubectl describe pod myapp
+kubectl expose pod myapp --type=NodePort --port 80 --name=myapp-service
+kubectl get svc
+
+
