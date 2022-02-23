@@ -1,0 +1,4 @@
+sudo -i
+curl -sfL https://get.k3s.io | sh -
+kubectl get nodes
+kubectl get pod --all-namespaces
