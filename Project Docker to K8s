@@ -10,4 +10,47 @@
    33  apt install default-jdk
    34  java --version
    35  apt install maven
-   36  mvn --version
+   36  mvn version
+#we will download out application from git hub complie it using maven 
+ 1  git clone  https://github.com/gopal1409/springboot-chat-app.git
+    2  cd springboot-chat-app/
+    3  mvn clean package
+    4  cd target/
+    5  ls
+    6  cd ..
+    7  ls
+    8  cat dockerfile
+    9  docker build -t gopal1409/chatapp .
+   10  docker images
+
+
+#once we got the jar file we will convert the same into an container based image. 
+9  docker build -t gopal1409/chatapp .
+   10  docker images
+
+#we will do docker login we will upload the image in hub.docker.com
+
+docker login
+docker push gopal1409/chatapp
+
+#to see the logs
+kubectl logs my-chat-app
+
+#we need to run the image in k8s
+20  kubectl get pod
+   21  kubectl run my-chat-app --image gopal1409/chatapp
+   22  kubectl get pod
+
+#to verify the pod is running my image
+kubectl describe pod my-chat-app
+
+## usermod -aG docker ubuntu
+#how to expose your application outside kubernetes cluster
+ 69  kubectl get pod
+   70  kubectl expose pod my-chat-app --type=NodePort --port=8080 --name=my-chatapp-service
+   71  kubectl get svc
+#how to delete the pod
+  78  kubectl get pod
+   79  kubectl delete pod my-chat-app
+   80  kubectl get pod
+   81  kubectl delete pod my-first-pod
