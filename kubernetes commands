@@ -6,3 +6,9 @@ kubectl describe pod my-first-pod
 kubectl get pod
 kubectl get pod my-first-pod
 kubectl describe pod my-first-pod
+
+#how to apply an manifest or yaml file to your kubernetes cluster
+nano pod.yaml
+kubectl apply -f pod.yaml
+kubectl get pod
+kubectl describe pod myapp
