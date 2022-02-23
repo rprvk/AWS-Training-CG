@@ -1,0 +1,6 @@
+#using the command line we will deploy an pod
+  70  kubectl run my-first-pod --image nginx
+   71  kubectl get pod
+   72  kubectl edit pod my-first-pod
+#to come out of the edit
+Press Esc :q
