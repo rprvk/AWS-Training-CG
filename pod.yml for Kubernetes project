@@ -1,0 +1,12 @@
+#we know that everything in kubernetes interact with api. 
+apiVersion: v1
+kind: Pod #pod is an common object
+metadata: #when we apply this code the name of the pod will be my app. which we define using metadata and name
+  name: myapp #myapp is your user define name for your pod
+spec: #specification for the pod
+  containers: #inside my pod i ll have a container
+  - name: myapp #this will be container name
+    image: nginx:1.14.2
+    # internally the application is a web based application so inside your kubernetes ckluster it need to run on a port
+    ports:
+    - containerPort: 80 #this is an httpd based application running on port 80
