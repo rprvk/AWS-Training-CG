@@ -1,0 +1,46 @@
+#commands
+kubectl get nodes
+nano deployment.yaml
+kubectl apply -f deployment.yaml
+kubectl get deployment
+kubectl get rs
+kubectl get pod
+ 
+
+
+#yaml
+
+#this is the base defination for any manifest in k8s
+#when i use deployment the api version change as it is a new api
+apiVersion: apps/v1 
+kind: Deployment 
+metadata:
+  name: myapp-deployment
+  labels:
+    app: myapp
+####this is the deployment part===
+#####below this is the specfication abdout deployment##############
+spec:
+  replicas: 2 #inside my deployment i ll create two pod
+  #once it create two pod k8s will assign autmatically an uniqe hash value
+  #how this pod is going to be managed by this deployment
+  selector:
+    matchLabels: #it is like an match expressiong
+      app: myapp #we define the match express in key value format
+
+# in specifcation i have define rep0licas which will create two pod for me
+#next we define selector using the same in label both the pod. 
+  #inside the pod i need to deploy a container. 
+  template: #to deploy an application multiple times inside different pod
+    metadata:
+      name: myapp-template
+      labels:
+        app: myapp 
+    spec:
+      containers:
+        - name: myapp-container
+          image: nginx
+          ports:
+            - containerPort: 80
+    
+    
