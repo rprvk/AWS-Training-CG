@@ -1,0 +1,9 @@
+#commands
+kubectl apply -f service.yaml
+   33  kubectl get svc
+   34  cler
+   35  clear
+   36  kubectl get pod
+   37  kubectl get pod -o wide
+   38  kubectl get svc
+   40  kubectl describe svc myappsrv
