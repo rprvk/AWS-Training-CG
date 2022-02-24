@@ -5,6 +5,14 @@ kubectl apply -f deployment.yaml
 kubectl get deployment
 kubectl get rs
 kubectl get pod
+kubectl get deploy
+   12  kubectl get rs
+   13  kubectl get pod
+   14  kubectl get deploy
+   15  kubectl describe deploy
+   16  kubectl describe rs
+   17  kubectl get pod
+   18  kubectl describe pod myapp-deployment-84fcb7989f-zwhk7
  
 
 
