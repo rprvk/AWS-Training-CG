@@ -1,9 +1,117 @@
 #commands
+
+kubectl get nodes
+nano service.yaml
 kubectl apply -f service.yaml
-   33  kubectl get svc
-   34  cler
-   35  clear
-   36  kubectl get pod
-   37  kubectl get pod -o wide
-   38  kubectl get svc
-   40  kubectl describe svc myappsrv
+kubectl get svc
+kubectl get pod
+kubectl get pod -o wide
+kubectl get svc
+kubectl describe svc myappsrv
+
+kubectl get deploy
+kubectl set image deployment/myapp-deployment  myapp-container=piuma/phpsysinfo
+kubectl rollout status deployment/myapp-deployment #moving from one version to another version
+kubectl get rs
+kubectl describe deploy myapp-deployment
+kubectl rollout history deployment/myapp-deployment
+
+kubectl set image deployment/myapp-deployment  myapp-container=gopal1409/chatapp --record
+kubectl rollout history deployment/myapp-deployment
+kubectl get pod
+
+
+
+#yaml
+
+apiVersion: v1 
+kind: Service
+metadata:
+  name: myappsrv
+
+spec:
+  type: NodePort #you can have LoadBalancer or you can have cluster ip
+  selector:
+    app: myapp 
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80 
+      nodePort: 31233
+
+
+
+#commands
+
+nano service.yaml
+kubectl apply -f service.yaml
+kubectl get svc
+kubectl set image deployment/myapp-deployment  myapp-container=gopal1409/chatapp --record
+kubectl rollout history deployment/myapp-deployment
+kubectl get pod
+
+
+#yaml
+
+apiVersion: v1 
+kind: Service
+metadata:
+  name: myappsrv
+
+spec:
+  type: NodePort #you can have LoadBalancer or you can have cluster ip
+  selector:
+    app: myapp 
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080 
+      nodePort: 31233
+      
+      
+      
+ #commands
+ #if we rollback and undo, go to different revisions we also need to change the service(80,8080)
+ 
+  kubectl get deploy
+   63  kubectl describe deploy myapp-deployment
+   64  kubectl rollout history deploy myapp-deployment
+   65  kubectl rollout history deploy myapp-deployment --revision=2
+   66  kubectl rollout history deploy myapp-deployment --revision=1
+   67  kubectl rollout undo deploy myapp-deployment
+   68  kubectl describe deploy myapp-deployment
+   69  kubectl rollout undo deploy myapp-deployment
+   70  kubectl describe deploy myapp-deployment
+   71  kubectl rollout history deploy myapp-deployment
+   72  kubectl rollout undo deploy myapp-deployment --to-revision=1
+   73  kubectl describe deploy myapp-deployment
+   74  kubectl get rs
+   
+   
+   
+#manual scaling
+
+kubectl get deploy
+kubectl scale deploy myapp-deployment --replicas=10
+kubectl get pod
+kubectl get rs
+kubectl get pod
+kubectl get svc
+   
+   
+   
+#auto scaling
+   
+kube autoscale deploy myapp-deployment --min=10 --max=15 --cpu-percent=80  #if cpu utilization has come to 80%, then it increse the pods
+kubectl get hpa   #horizontal pod autoscaler
+      
+   
+#delete a pod
+#even though we delete a pod, it will automatically comeback beacause we have a put a min count of 10
+   
+kubectl get pod
+kubectl get deploy
+kubectl delete pod myapp-deployment-84fcb7989f-q9f59 #this is pod name at last, we get this by doing kubectl get pod
+kubectl get deploy
+
+
