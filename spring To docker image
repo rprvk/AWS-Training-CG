@@ -1,0 +1,59 @@
+#docker file
+
+FROM openjdk:11
+LABEL MAINTAINER="https://github.com/gopal1409"
+LABEL APPLICATION="user login page"
+WORKDIR /usr/app
+ARG JAR_FILE=target/dbauthentication-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} user.jar
+#to run the jar file
+EXPOSE 8080
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","user.jar"]
+
+#commands
+
+root@ip-172-31-13-167:~# history
+    1  clear
+    2  sudo apt-get update
+    3  sudo apt-get install     ca-certificates     curl     gnupg     lsb-release
+    4  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    4.1 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    5  sudo apt-get update
+    6  sudo apt-get install docker-ce docker-ce-cli containerd.io
+    7  docker --version
+    8  docker ps
+    9  javac
+   10  apt-install default-jdk
+   11  apt install default-jdk
+   12  apt install maven
+   13  git --version
+   
+   #we will deploy an container based postgress sql
+    16  docker run --name some-postgres -p 5042:5042 -e POSTGRES_PASSWORD=mysecretpassword -d postgres
+   17  docker ps
+#once we find the postgress sql container is running
+#in security group open 5042 port number and 8080
+#before we push our application to github we need to change the application properties with public ip and username
+#next we will push our application to github
+  12 ls
+  13 git add .
+  14 git init
+  15 git add .
+  19 git commit -m "Intial Project"
+  20 git remote add origin https://github.com/gopal1409/spring.git
+  21 git push
+  22  git push --set-upstream origin master
+  
+  #now we will conver the application into a jar file
+  31  mvn clean package -DskipTests
+   32  docker images
+   33  docker build -t myapp .
+   34  docker images
+and finally build an image out of it
+__________________________________________________-
+#if you have docker installed already
+mvn clean package -DskipTests
+   32  docker images
+   33  docker build -t myapp .
+   34  docker images
+and finally build an image out of it
