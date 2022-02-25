@@ -32,7 +32,7 @@ root@ip-172-31-13-167:~# history
     16  docker run --name some-postgres -p 5042:5042 -e POSTGRES_PASSWORD=mysecretpassword -d postgres
    17  docker ps
 #once we find the postgress sql container is running
-#in security group open 5042 port number and 8080
+#in security group open 5042 port number and 8080 in our instance
 #before we push our application to github we need to change the application properties with public ip and username
 #next we will push our application to github
   12 ls
